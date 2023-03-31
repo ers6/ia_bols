@@ -1,0 +1,118 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 300,
+  "height": 150,
+  "padding": {"top": 0, "left": 0, "right": 0, "bottom": 0},
+  "signals": [
+    {
+      "name": "hover",
+      "value": null,
+      "on": [
+        {"events": "symbol:mouseover", "update": "datum"},
+        {"events": "symbol:mouseout", "update": "null"}
+      ]
+    },
+    {
+      "name": "title",
+      "value": "Internet Archive BoL 2011-2023",
+      "update": "hover ? hover.name + ' (' + hover.address + ')' : 'Internet Archive BoL 2011-2023'"
+    }
+  ],
+  "data": [
+    {
+      "name": "world",
+      "url": "data/world-110m.json",
+      "format": {"type": "topojson", "feature": "countries"},
+      "transform": [{"type": "geopath", "projection": "projection"}]
+    },
+    {
+      "name": "locations",
+      "url": "https://raw.githubusercontent.com/ers6/ia_bols/main/location_key.csv",
+      "format": {"type": "csv", "parse": "auto", "delimiter": ","},
+      "transform": [
+        {
+          "type": "geopoint",
+          "projection": "projection",
+          "fields": ["lon", "lat"]
+        },
+        {"type": "filter", "expr": "datum.x != null && datum.y != null"}
+      ]
+    },
+    {
+      "name": "shipments",
+      "url": "https://raw.githubusercontent.com/ers6/ia_bols/main/shipments.csv",
+      "format": {"type": "csv", "parse": "auto", "delimiter": ","},
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "locations",
+          "key": "id",
+          "fields": ["supplier_location_id", "company_location_id"],
+          "as": ["source", "target"]
+        },
+        {"type": "filter", "expr": "datum.source && datum.target"},
+        {"type": "linkpath", "shape": "line"}
+      ]
+    }
+  ],
+  "scales": [],
+  "projections": [
+    {
+      "name": "projection",
+      "type": "equalEarth",
+      "scale": 200,
+      "translate": [{"signal": "width / 2"}, {"signal": "height / 2"}]
+    }
+  ],
+  "marks": [
+    {
+      "type": "path",
+      "from": {"data": "world"},
+      "encode": {
+        "enter": {"fill": {"value": "#dedede"}, "stroke": {"value": "white"}},
+        "update": {"path": {"field": "path"}}
+      }
+    },
+    {
+      "type": "symbol",
+      "from": {"data": "locations"},
+      "encode": {
+        "enter": {
+          "size": {"value": 16},
+          "fill": {"value": "steelblue"},
+          "fillOpacity": {"value": 0.8},
+          "stroke": {"value": "black"},
+          "strokeWidth": {"value": 1.5}
+        },
+        "update": {"x": {"field": "x"}, "y": {"field": "y"}}
+      }
+    },
+    {
+      "type": "text",
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"signal": "width", "offset": -500},
+          "y": {"value": 0},
+          "fill": {"value": "black"},
+          "fontSize": {"value": 20},
+          "align": {"value": "right"}
+        },
+        "update": {"text": {"signal": "title"}}
+      }
+    },
+    {
+      "type": "path",
+      "interactive": false,
+      "from": {"data": "shipments"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "stroke": {"value": "black"},
+          "strokeOpacity": {"value": 0.15}
+        }
+      }
+    }
+  ],
+  "config": {}
+}
