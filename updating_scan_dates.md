@@ -11,11 +11,11 @@ https://archive.org/advancedsearch.php?q=%22scanningcenter%3A+cebu%22&fl%5B%5D=s
 
 **shenzhen**:
 
-https://archive.org/advancedsearch.php?q=%22scanningcenter%3A+shenzhen%22&fl%5B%5D=scandate&rows=5600000&output=json&callback=callback&save=no"
+https://archive.org/advancedsearch.php?q=%22scanningcenter%3A+shenzhen%22&fl%5B%5D=scandate&rows=5600000&output=json&callback=callback&save=no
 
 **hongkong**:
 
-https://archive.org/advancedsearch.php?q=%22scanningcenter%3A+hongkong%22&fl%5B%5D=scandate&rows=5600000&output=json&callback=callback&save=no"
+https://archive.org/advancedsearch.php?q=%22scanningcenter%3A+hongkong%22&fl%5B%5D=scandate&rows=5600000&output=json&callback=callback&save=no
 
 ## For more on IA's API 
 - See advnaced search: https://archive.org/advancedsearch.php
